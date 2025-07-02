@@ -1,0 +1,534 @@
+* {
+    box-sizing: border-box;
+}
+
+@media(max-width: 1024px) {
+    .header {
+        margin-top: 8px;
+    }
+}
+
+@media(max-width: 600px) {
+    .header {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    user-select: none;
+    background: linear-gradient(to right, red, purple, turquoise);
+    background-size: 200% 100%;
+    animation: animateGradient 5s linear infinite;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    width: 100%;
+    max-width: 90vw;
+    margin: 0 auto;
+    flex-wrap: nowrap;
+    gap: 12px;
+    min-width: 0;
+    /* NEW: allow children to shrink */
+}
+
+.logo-text {
+    font-size: clamp(20px, 6vw, 64px);
+    font-weight: 900;
+    font-family: 'Arial Black', sans-serif;
+    background: url('/img/glitter-gold.png') repeat;
+    background-size: contain;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    gap: 0 8px;
+    margin: 0;
+    flex-shrink: 1;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.logo-text .line1,
+.logo-text .line2 {
+    white-space: nowrap;
+}
+
+@media (max-width: 500px) {
+    #userMenu {
+        transform: scale(0.85);
+        transform-origin: right;
+    }
+
+    .logo-text {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 400px) {
+    .topbar {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .logo-text {
+        font-size: clamp(10px, 7vw, 48px);
+        /* Shrinks to as small as 10px */
+        font-weight: 900;
+        font-family: 'Arial Black', sans-serif;
+        background: url('/img/glitter-gold.png') repeat;
+        background-size: contain;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: unset;
+        margin: 0;
+        flex-grow: 1;
+        min-width: 0;
+    }
+
+    #userMenu {
+        transform: scale(0.85);
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 350px) {
+    .logo-text {
+        font-size: min(6.5vw, 34px);
+    }
+}
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.header a {
+    float: left;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    width: 180px;
+    background-color: white;
+    margin: 5px;
+    border-radius: 8px;
+    font-size: 100%;
+}
+
+#landing-page-content,
+#start {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 90vw;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+}
+
+#loginButton,
+#getStartedButton {
+    background-color: #1DB954;
+    color: white;
+    width: 180px;
+    height: 50px;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#createPlaylistButton {
+    background-color: #1DB954;
+    color: white;
+    width: 300px;
+    height: 100px;
+    border: none;
+    border-radius: 16px;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spotifyIcon {
+    height: 20px;
+    margin-right: 8px;
+    margin-bottom: 2px;
+}
+
+.artists-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    width: 60vw;
+}
+
+.artist {
+    margin-left: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: calc(16%);
+    text-align: center;
+    background-color: white;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.artists {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: white;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.artist-image {
+    height: 140px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.artist-name {
+    font-weight: bold;
+    color: black;
+}
+
+.selected {
+    background-color: #1DB954;
+}
+
+.artists-header {
+    padding: 20px;
+    background-color: white;
+    text-align: center;
+    width: 100%;
+    border-radius: 4px;
+    border: 4px solid #ccc;
+}
+
+#playlistContainer {
+    margin-top: 15px;
+    width: 95%;
+    height: 70vh;
+}
+
+@keyframes animateGradient {
+    0% {
+        background-position: 0 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+@media (min-width: 1000px) {
+    .artist-name {
+        font-size: 20px;
+    }
+}
+
+#tracksContainer,
+#artistsContainer,
+#recentContainer {
+    width: 95%;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+#tracksContainer {
+    min-height: 100vh;
+}
+
+#artistsContainer {
+    height: 6090px;
+}
+
+#recentContainer {
+    height: 4690px;
+}
+
+#tabs ul {
+    margin: 0;
+    padding: 0;
+}
+
+#tabs {
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px solid silver;
+}
+
+.tab-button {
+    flex: 1;
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    cursor: pointer;
+    height: 50px;
+    background-color: white;
+}
+
+#tracksContainer .tab-button {
+    margin-right: 10px;
+}
+
+.track-number,
+.artist-number {
+    margin-right: 16px;
+    font-weight: 600;
+}
+
+.artwork-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: black;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.album-image {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    color: black;
+}
+
+.now.playing {
+    margin-top: 60px;
+    margin-left: 5%;
+}
+
+#titleHeader {
+    font-size: 48px;
+    color: white;
+    font-weight: 600;
+}
+
+#header {
+    display: none;
+}
+
+.divider {
+    width: 2px;
+    margin: 6px;
+    background: silver;
+}
+
+a {
+    text-decoration: none;
+}
+
+#userMenu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border-radius: 15px;
+    padding: 8px 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+}
+
+#userMenu img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#userMenu span {
+    font-size: 20px;
+    font-weight: 900;
+    color: black;
+}
+
+#userMenu:hover {
+    transform: scale(1.3);
+}
+
+#userPic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+#userName {
+    font-weight: bold;
+    color: black;
+}
+
+#userDropdown {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 12px;
+    z-index: 100;
+    display: none;
+}
+
+/* Show dropdown on userMenu hover OR dropdown hover */
+#userMenu:hover #userDropdown,
+#userDropdown:hover,
+#userMenu.active #userDropdown {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1.3);
+    padding: 12px 20px;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Scale userMenu only if not active */
+#userMenu:hover:not(.active) {
+    transform: scale(1.3);
+}
+
+#userDropdown button {
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 6px 12px;
+}
+
+#userDropdown.show-dropdown {
+    display: block;
+    transform: scale(1.3);
+    padding: 12px 20px;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    transition: all 0.2s ease-in-out;
+}
+
+#userMenu.active:hover {
+    transform: none !important;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.logo-text {
+    font-size: clamp(24px, 6vw, 72px);
+    font-weight: 900;
+    font-family: 'Arial Black', sans-serif;
+    background: url('/img/glitter-gold.png') repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin: 0;
+    cursor: pointer;
+    flex: 1;
+}
+
+#userMenu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border-radius: 15px;
+    padding: 8px 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#userPic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+#userName {
+    font-weight: bold;
+    color: black;
+}
+
+#userDropdown {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 12px;
+    z-index: 100;
+}
+
+#userDropdown button {
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 6px 12px;
+}
+

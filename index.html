@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Winnie's Spotify App</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/musicbar.css" />
+    <script src="/app.js" defer></script>
+
+    <style>
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .logo-text {
+            font-size: clamp(24px, 6vw, 72px);
+            font-weight: 900;
+            font-family: 'Arial Black', sans-serif;
+            background: url('/img/glitter-gold.png') repeat;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        #userMenu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border-radius: 15px;
+            padding: 8px 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #userPic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        #userName {
+            font-weight: bold;
+            color: black;
+        }
+
+        #userDropdown {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 8px 12px;
+            z-index: 100;
+        }
+
+        #userDropdown button {
+            background: none;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 6px 12px;
+        }
+
+        #userMenu:hover #userDropdown {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <h1 class="logo-text" onclick="redirectToHomePage()">
+            <span class="line1">WiNNiE'S</span>
+            <span class="line2">SPOTiFY APP</span>
+        </h1>
+
+        <div id="userMenu" style="display: none;">
+            <img id="userPic" alt="User Pic">
+            <span id="userName"></span>
+            <div id="userDropdown">
+                <button onclick="logout()">Log out</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="header" id="header" style="display: none;">
+        <div class="rowA">
+            <a href="/pages/tracks/shorttracks.html">Top Tracks</a>
+            <a href="/pages/artists/shortartists.html">Top Artists</a>
+        </div>
+        <div class="rowB">
+            <a href="/pages/recent.html" id="c">Recently Played</a>
+            <a href="/pages/playlist.html" id="d">Playlist Generator</a>
+        </div>
+    </div>
+
+    <div id="landing-page-content">
+        <h1 id="mainGreeting">Welcome to Winnie's Spotify App!</h1>
+        <p>Discover new music with personalized playlists, and view your top tracks songs, genres and listening history.
+        </p>
+        <p id="loginp">Log in with your Spotify account to get started:</p>
+
+        <div id="userProfile" style="margin-top: 20px;"></div>
+
+        <button id="loginButton" onclick="requestAuthorization()">
+            <img src="/img/icon.svg" alt="spotify icon" class="spotifyIcon" /> Log in to Spotify
+        </button>
+    </div>
+
+    <div id="playlistContainer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                const params = new URLSearchParams(hash);
+                let token = params.get("access_token");
+                let expiresIn = parseInt(params.get("expires_in"), 10); // usually 3600 seconds
+
+                if (token && expiresIn) {
+                    sessionStorage.setItem("access_token", token);
+                    sessionStorage.setItem("token_expires_at", Date.now() + expiresIn * 1000);
+                    window.location.hash = "";
+                }
+            }
+
+            const tokenExpiration = parseInt(sessionStorage.getItem("token_expires_at"), 10);
+            if (tokenExpiration && Date.now() >= tokenExpiration) {
+                console.log("Access token expired on load. Logging out...");
+                logout();
+                return; // stop further execution
+            }
+
+            const accessToken = sessionStorage.getItem("access_token");
+            const header = document.getElementById("header");
+            const loginButton = document.getElementById("loginButton");
+            const loginText = document.getElementById("loginp");
+
+            if (accessToken) {
+                if (header) header.style.display = "flex";
+                if (loginButton) {
+                    loginButton.innerHTML = "Log out of Spotify";
+                    loginButton.onclick = logout;
+                }
+                if (loginText) {
+                    loginText.textContent = "You're logged in. Start exploring your music!";
+                }
+
+                loadUserProfile();
+
+                // Start interval to auto-logout after expiration
+                setInterval(() => {
+                    const exp = parseInt(sessionStorage.getItem("token_expires_at"), 10);
+                    if (exp && Date.now() >= exp) {
+                        console.log("Access token expired during session. Logging out...");
+                        logout();
+                    }
+                }, 10000); // check every 10 seconds
+            }
+        });
+
+        async function loadUserProfile() {
+            const token = sessionStorage.getItem("access_token");
+            if (!token) return;
+
+            try {
+                const res = await fetch("https://api.spotify.com/v1/me", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!res.ok) {
+                    console.error("Spotify /me API failed with status", res.status);
+                    logout(); // auto logout on token failure
+                    return;
+                }
+
+                const data = await res.json();
+                console.log("Spotify profile data:", data);
+
+                const mainGreeting = document.getElementById("mainGreeting");
+                const userMenu = document.getElementById("userMenu");
+                const userPic = document.getElementById("userPic");
+                const userName = document.getElementById("userName");
+
+                if (userMenu && userPic && userName) {
+                    userPic.src = data.images?.[0]?.url || "https://via.placeholder.com/40";
+                    userName.textContent = data.display_name || "User";
+                    userMenu.style.display = "flex";
+                }
+
+                const greetings = [
+                    `Hi, ${data.display_name}! 👋`,
+                    `Welcome back, ${data.display_name}!`,
+                    `You’re in, ${data.display_name}. Time to explore.`,
+                    `Your sound awaits, ${data.display_name}.`,
+                    `Let’s make today sound better, ${data.display_name}.`,
+                    `${data.display_name}, your Spotify stats have entered the chat.`,
+                ];
+                const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+                mainGreeting.textContent = randomGreeting;
+
+            } catch (err) {
+                console.error("Failed to load user profile:", err);
+            }
+        }
+
+        function requestAuthorization() {
+            sessionStorage.clear();
+
+            const clientId = "3629edd575284d0aa6671c69ae8fb3d3";
+            const redirectUri = `${window.location.origin}/`;
+            const scopes = [
+                "user-top-read",
+                "user-read-recently-played",
+                "playlist-modify-public"
+            ].join(" ");
+
+            const url = `https://accounts.spotify.com/authorize` +
+                `?client_id=${clientId}` +
+                `&response_type=token` +
+                `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+                `&scope=${encodeURIComponent(scopes)}` +
+                `&show_dialog=true`;
+
+            window.location = url;
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            const logoutWindow = window.open("https://accounts.spotify.com/logout", "_blank");
+
+            setTimeout(() => {
+                if (logoutWindow) logoutWindow.close();
+                window.location.href = `${window.location.origin}/`;
+
+            }, 1400);
+        }
+
+        function redirectToHomePage() {
+            window.location.href = `${window.location.origin}/`;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Tracks</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/app.js"></script>
+</head>
+<body onload="displayTopArtists('medium_term')">
+    <header class="topbar">
+        <h1 class="logo-text" onclick="redirectToHomePage()">
+            <span class="line1">WiNNiE'S</span>
+            <span class="line2">SPOTiFY APP</span>
+        </h1>
+
+        <div id="userMenu" style="display: none;">
+            <img id="userPic" alt="User Pic">
+            <span id="userName"></span>
+            <div id="userDropdown">
+                <button onclick="logout()">Log out</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="header">
+        <div class="rowA">
+            <a href="/pages/tracks/shorttracks.html">Top Tracks</a>
+            <a href="/pages/artists/shortartists.html">Top Artists</a>
+        </div>
+
+        <div class="rowB">
+            <a href="/pages/recent.html">Recently Played</a>
+            <a href="/pages/playlist.html">Playlist Generator</a>
+        </div>
+    </div>
+
+    <h1 id="titleHeader">Top Artists</h1>
+
+
+    <div id="artistsContainer">
+
+        <div id="tabs">
+            <button id="shortTermBtn" class="tab-button" onclick="window.location.href='shortartists.html'">Last 4 weeks</button>
+            <div class="divider"></div>
+            <button id="mediumTermBtn" class="tab-button">Last 6 months</button>
+            <div class="divider"></div>
+            <button id="longTermBtn" class="tab-button" onclick="window.location.href='longartists.html'">Past year</button>
+        </div>
+        <ul id="topTracksList" class="top-tracks-list"></ul>
+    </div>
+
+</body>
+</html>

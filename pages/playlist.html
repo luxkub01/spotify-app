@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlist Generator</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/load.css">
+    <script src="/app.js" defer></script>
+</head>
+
+<body>
+    <header class="topbar">
+        <h1 class="logo-text" onclick="redirectToHomePage()">
+            <span class="line1">WiNNiE'S</span>
+            <span class="line2">SPOTiFY APP</span>
+        </h1>
+
+        <div id="userMenu" style="display: none;">
+            <img id="userPic" alt="User Pic">
+            <span id="userName"></span>
+            <div id="userDropdown">
+                <button onclick="logout()">Log out</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="header">
+        <div class="rowA">
+            <a href="/pages/tracks/shorttracks.html">Top Tracks</a>
+            <a href="/pages/artists/shortartists.html">Top Artists</a>
+        </div>
+
+        <div class="rowB">
+            <a href="/pages/recent.html">Recently Played</a>
+            <a href="/pages/playlist.html">Playlist Generator</a>
+        </div>
+    </div>
+
+    <h1 id="titleHeader">Playlist Generator</h1>
+
+    <div id="start">
+        <p>Create a personalized playlist with reccomendations featuring your favorite artists and songs in your
+            library.</p>
+    </div>
+
+    <button id="getStartedButton" onclick="showArtists()">
+        Get Started
+    </button>
+
+    <div id="showArtistsContainer" class="artists-container">
+        <div id="artistHeader" class="artist-header">
+        </div>
+    </div>
+
+    <button id="createPlaylistButton" style="display: none" onclick="init()">
+        Create Playlist
+    </button>
+
+    <div class="scene" id="loading" style="display: none">
+        <div class="objects">
+            <div class="square"></div>
+            <div class="circle"></div>
+            <div class="triangle"></div>
+        </div>
+        <div class="wizard">
+            <div class="body"></div>
+            <div class="right-arm">
+                <div class="right-hand"></div>
+            </div>
+            <div class="left-arm">
+                <div class="left-hand"></div>
+            </div>
+            <div class="head">
+                <div class="beard"></div>
+                <div class="face">
+                    <div class="adds"></div>
+                </div>
+                <div class="hat">
+                    <div class="hat-of-the-hat"></div>
+                    <div class="four-point-star --first"></div>
+                    <div class="four-point-star --second"></div>
+                    <div class="four-point-star --third"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="progress" id="progress" style="display: none"></div>
+
+    <div id="playlistContainer"></div>
+</body>
+
+</html>
